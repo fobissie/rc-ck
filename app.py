@@ -1,4 +1,4 @@
-import numpy as np
+mport numpy as np
 import plotly.graph_objects as go
 from dash import Dash, dcc, html
 from dash.dependencies import Input, Output
@@ -162,203 +162,206 @@ app.layout = html.Div(
         dcc.Markdown(
             """
 ```text
-   + ── U₀ ── R ──+───||─── -
-                       C	
-  •	U₀: ideale Gleichspannungsquelle
-	•	R : Widerstand
-	•	C : Kondensator
+         + U₀
+         │ │
+         │ │
+   +─────┴─┴─────+
+   │             │
+   │        ┌────┴────┐
+   │        │   R     │
+   │        └─────────┘
+   │             │
+   │        ┌────┴────┐
+   │        │   C     │
+   │        └─||  ||──┘
+   │             │
+   +─────────────+─── 0 V (Bezug)
+```
 
-Beim Laden wird ein zunächst ungeladener Kondensator an U₀ gelegt.
-Beim Entladen ist der Kondensator anfangs auf U₀ geladen und entlädt sich nur über R.
-“””,
-style={“background”: “#f5f5f7”, “padding”: “1rem”, “borderRadius”: “8px”}
-),
-html.H2("Theoretischer Hintergrund", style={"marginTop": "2rem"}),
+- U₀: ideale Gleichspannungsquelle
+- R : Widerstand
+- C : Kondensator
 
-    dcc.Markdown(
-        """Zeitkonstante τ = R·C
+Laden: Kondensator startet ungeladen und wird an U₀ angeschlossen.  
+Entladen: Kondensator ist anfangs auf U₀ geladen und entlädt sich nur über R.
+""",
+            style={"background": "#f5f5f7", "padding": "1rem", "borderRadius": "8px"}
+        ),
+
+        html.H2("Theoretischer Hintergrund", style={"marginTop": "2rem"}),
+
+        dcc.Markdown(
+            """
+Zeitkonstante τ = R·C
 
 Die Zeitkonstante τ beschreibt, wie schnell der RC-Kreis reagiert:
-	•	Einheit: Sekunden
-	•	Nach t = τ gilt:
-	•	Laden: U_C(τ) ≈ 0,63 · U₀
-	•	Entladen: U_C(τ) ≈ 0,37 · U₀
+- Einheit: Sekunden
+- Nach t = τ gilt:
+  - Laden: \( U_C(τ) ≈ 0{,}63 \cdot U_0 \)
+  - Entladen: \( U_C(τ) ≈ 0{,}37 \cdot U_0 \)
 
 Nach ungefähr 5·τ ist der Vorgang praktisch abgeschlossen.
 
-⸻
-
 Laden eines RC-Kreises (U_C(0) = 0 V)
-	•	Spannung:
-\( U_C(t) = U_0 \cdot \bigl(1 - e^{-t/(R C)}\bigr) \)
-	•	Ladung:
-\( Q(t) = C \cdot U_C(t) \)
-	•	Strom:
-\( I(t) = \frac{U_0}{R} \cdot e^{-t/(R C)} \)
+- Spannung: \( U_C(t) = U_0 \cdot (1 - e^{-t/(RC)}) \)
+- Ladung: \( Q(t) = C \cdot U_C(t) \)
+- Strom: \( I(t) = \frac{U_0}{R} \cdot e^{-t/(RC)} \)
+(zu Beginn maximal, fällt exponentiell ab)
 
-Der Strom ist zu Beginn am größten und fällt exponentiell ab.
+Entladen eines RC-Kreises (U_C(0) = U_0)
+- Spannung: \( U_C(t) = U_0 \cdot e^{-t/(RC)} \)
+- Ladung: \( Q(t) = C \cdot U_0 \cdot e^{-t/(RC)} \)
+- Strom: \( I(t) = -\frac{U_0}{R} \cdot e^{-t/(RC)} \)
+(Minus zeigt umgekehrte Stromrichtung)
 
-⸻
+Einheiten in der App:
+- Zeit t in Millisekunden (ms)
+- Ladung Q in Milli-Coulomb (mC)
+- Strom I in Milliampere (mA)
+""",
+            style={"background": "#f5f5f7", "padding": "1rem", "borderRadius": "8px"}
+        ),
 
-Entladen eines RC-Kreises (U_C(0) = U₀)
-	•	Spannung:
-\( U_C(t) = U_0 \cdot e^{-t/(R C)} \)
-	•	Ladung:
-\( Q(t) = C \cdot U_0 \cdot e^{-t/(R C)} \)
-	•	Strom:
-\( I(t) = -\frac{U_0}{R} \cdot e^{-t/(R C)} \)
-
-Das Minuszeichen zeigt die umgekehrte Stromrichtung im Vergleich zum Ladevorgang.
-
-⸻
-
-In dieser App werden alle Größen in sinnvollen Einheiten dargestellt:
-	•	Zeit t in Millisekunden (ms)
-	•	Ladung Q in Milli-Coulomb (mC)
-	•	Strom I in Milliampere (mA)
-“””,
-style={“background”: “#f5f5f7”, “padding”: “1rem”, “borderRadius”: “8px”}
-),
-
-html.Footer(
-      "Hinweis: Es wird ein idealer RC-Kreis ohne parasitäre Widerstände, Leckströme "
-      "oder nichtlineare Effekte angenommen.",
-      style={"marginTop": "2rem", "fontSize": "0.8rem", "color": "#777"}
-  )
-
-  ]
+        html.Footer(
+            "Hinweis: Es wird ein idealer RC-Kreis ohne parasitäre Widerstände, Leckströme "
+            "oder nichtlineare Effekte angenommen.",
+            style={"marginTop": "2rem", "fontSize": "0.8rem", "color": "#777"}
+        ),
+    ]
 )
 
 @app.callback(
-Output(“voltage-graph”, “figure”),
-Output(“charge-graph”, “figure”),
-Output(“current-graph”, “figure”),
-Output(“info-panel”, “children”),
-Output(“mode-label”, “children”),
-Input(“R-slider”, “value”),
-Input(“C-slider”, “value”),
-Input(“U0-slider”, “value”),
-Input(“mode-toggle”, “value”)
+    Output("voltage-graph", "figure"),
+    Output("charge-graph", "figure"),
+    Output("current-graph", "figure"),
+    Output("info-panel", "children"),
+    Output("mode-label", "children"),
+    Input("R-slider", "value"),
+    Input("C-slider", "value"),
+    Input("U0-slider", "value"),
+    Input("mode-toggle", "value"),
 )
 def update_graphs(R_ohm, C_micro_f, U0, mode_is_charge):
-“””
-mode_is_charge = True  -> Laden
-False -> Entladen
-“””
-# Einheiten umrechnen
-C = C_micro_f * 1e-6  # µF -> F
-tau = R_ohm * C       # Zeitkonstante in Sekunden
+    """
+    mode_is_charge = True  -> Laden
+    False -> Entladen
+    """
+    # Einheiten umrechnen
+    C = C_micro_f * 1e-6  # µF -> F
+    tau = R_ohm * C       # Zeitkonstante in Sekunden
 
-# Simulationszeit: 0 bis 5 * tau (mindestens etwas > 0)
-t_max = max(5 * tau, 0.01)
-t = np.linspace(0, t_max, 500)
+    # Simulationszeit: 0 bis 5 * tau (mindestens etwas > 0)
+    t_max = max(5 * tau, 0.01)
+    t = np.linspace(0, t_max, 500)
 
-if mode_is_charge:
-    mode_text = "Modus: Laden"
-    # Laden: U_C(0) = 0
-    Uc = U0 * (1 - np.exp(-t / tau))
-    Q = C * Uc
-    I = (U0 / R_ohm) * np.exp(-t / tau)
-else:
-    mode_text = "Modus: Entladen"
-    # Entladen: U_C(0) = U0
-    Uc = U0 * np.exp(-t / tau)
-    Q = C * U0 * np.exp(-t / tau)
-    I = -(U0 / R_ohm) * np.exp(-t / tau)
+    if mode_is_charge:
+        mode_text = "Modus: Laden"
+        # Laden: U_C(0) = 0
+        Uc = U0 * (1 - np.exp(-t / tau))
+        Q = C * Uc
+        I = (U0 / R_ohm) * np.exp(-t / tau)
+    else:
+        mode_text = "Modus: Entladen"
+        # Entladen: U_C(0) = U0
+        Uc = U0 * np.exp(-t / tau)
+        Q = C * U0 * np.exp(-t / tau)
+        I = -(U0 / R_ohm) * np.exp(-t / tau)
 
-# Info-Box-Text
-info_text = (
-    f"R = {R_ohm:.0f} Ω, "
-    f"C = {C_micro_f:.0f} µF, "
-    f"U₀ = {U0:.1f} V → "
-    f"Zeitkonstante τ = {tau*1000:.2f} ms, "
-    f"Darstellung von t = 0 bis {t_max*1000:.2f} ms"
-)
-
-t_ms = t * 1000
-tau_ms = tau * 1000
-
-# --- Spannung U_C(t) ---
-fig_u = go.Figure()
-fig_u.add_trace(
-    go.Scatter(
-        x=t_ms,
-        y=Uc,
-        mode="lines",
-        name="U_C(t)"
+    # Info-Box-Text
+    info_text = (
+        f"R = {R_ohm:.0f} Ω, "
+        f"C = {C_micro_f:.0f} µF, "
+        f"U₀ = {U0:.1f} V → "
+        f"Zeitkonstante τ = {tau*1000:.2f} ms, "
+        f"Darstellung von t = 0 bis {t_max*1000:.2f} ms"
     )
-)
-# Vertikale Linie bei t = τ
-fig_u.add_vline(x=tau_ms, line_dash="dash", line_width=1)
-fig_u.add_annotation(
-    x=tau_ms,
-    y=max(Uc),
-    text="t = τ",
-    showarrow=True,
-    arrowhead=2,
-    yshift=20
-)
-fig_u.update_layout(
-    xaxis_title="Zeit t [ms]",
-    yaxis_title="Spannung U_C [V]",
-    template="plotly_white",
-    margin=dict(l=40, r=10, t=10, b=40),
-)
 
-# --- Ladung Q(t) in mC ---
-fig_q = go.Figure()
-fig_q.add_trace(
-    go.Scatter(
-        x=t_ms,
-        y=Q * 1e3,   # C -> mC
-        mode="lines",
-        name="Q(t)"
+    t_ms = t * 1000
+    tau_ms = tau * 1000
+
+    # --- Spannung U_C(t) ---
+    fig_u = go.Figure()
+    fig_u.add_trace(
+        go.Scatter(
+            x=t_ms,
+            y=Uc,
+            mode="lines",
+            name="U_C(t)"
+        )
     )
-)
-fig_q.add_vline(x=tau_ms, line_dash="dash", line_width=1)
-fig_q.add_annotation(
-    x=tau_ms,
-    y=max(Q * 1e3),
-    text="t = τ",
-    showarrow=True,
-    arrowhead=2,
-    yshift=20
-)
-fig_q.update_layout(
-    xaxis_title="Zeit t [ms]",
-    yaxis_title="Ladung Q [mC]",
-    template="plotly_white",
-    margin=dict(l=40, r=10, t=10, b=40),
-)
-
-# --- Strom I(t) in mA ---
-fig_i = go.Figure()
-fig_i.add_trace(
-    go.Scatter(
-        x=t_ms,
-        y=I * 1e3,   # A -> mA
-        mode="lines",
-        name="I(t)"
+    # Vertikale Linie bei t = τ
+    fig_u.add_vline(x=tau_ms, line_dash="dash", line_width=1)
+    fig_u.add_annotation(
+        x=tau_ms,
+        y=max(Uc),
+        text="t = τ",
+        showarrow=True,
+        arrowhead=2,
+        yshift=20
     )
-)
-fig_i.add_vline(x=tau_ms, line_dash="dash", line_width=1)
-# Annotation irgendwo sinnvoll (oberhalb oder unterhalb)
-y_for_annot = float(np.max(I * 1e3)) if mode_is_charge else float(np.min(I * 1e3))
-fig_i.add_annotation(
-    x=tau_ms,
-    y=y_for_annot,
-    text="t = τ",
-    showarrow=True,
-    arrowhead=2,
-    yshift=20 if mode_is_charge else -20
-)
-fig_i.update_layout(
-    xaxis_title="Zeit t [ms]",
-    yaxis_title="Strom I [mA] (Vorzeichen = Richtung)",
-    template="plotly_white",
-    margin=dict(l=40, r=10, t=10, b=40),
-)
+    fig_u.update_layout(
+        xaxis_title="Zeit t [ms]",
+        yaxis_title="Spannung U_C [V]",
+        template="plotly_white",
+        margin=dict(l=40, r=10, t=10, b=40),
+    )
 
-return fig_u, fig_q, fig_i, info_text, mode_text
-if name == “main”:
-app.run_server(debug=True)
+    # --- Ladung Q(t) in mC ---
+    fig_q = go.Figure()
+    fig_q.add_trace(
+        go.Scatter(
+            x=t_ms,
+            y=Q * 1e3,   # C -> mC
+            mode="lines",
+            name="Q(t)"
+        )
+    )
+    fig_q.add_vline(x=tau_ms, line_dash="dash", line_width=1)
+    fig_q.add_annotation(
+        x=tau_ms,
+        y=max(Q * 1e3),
+        text="t = τ",
+        showarrow=True,
+        arrowhead=2,
+        yshift=20
+    )
+    fig_q.update_layout(
+        xaxis_title="Zeit t [ms]",
+        yaxis_title="Ladung Q [mC]",
+        template="plotly_white",
+        margin=dict(l=40, r=10, t=10, b=40),
+    )
+
+    # --- Strom I(t) in mA ---
+    fig_i = go.Figure()
+    fig_i.add_trace(
+        go.Scatter(
+            x=t_ms,
+            y=I * 1e3,   # A -> mA
+            mode="lines",
+            name="I(t)"
+        )
+    )
+    fig_i.add_vline(x=tau_ms, line_dash="dash", line_width=1)
+    # Annotation irgendwo sinnvoll (oberhalb oder unterhalb)
+    y_for_annot = float(np.max(I * 1e3)) if mode_is_charge else float(np.min(I * 1e3))
+    fig_i.add_annotation(
+        x=tau_ms,
+        y=y_for_annot,
+        text="t = τ",
+        showarrow=True,
+        arrowhead=2,
+        yshift=20 if mode_is_charge else -20
+    )
+    fig_i.update_layout(
+        xaxis_title="Zeit t [ms]",
+        yaxis_title="Strom I [mA] (Vorzeichen = Richtung)",
+        template="plotly_white",
+        margin=dict(l=40, r=10, t=10, b=40),
+    )
+
+    return fig_u, fig_q, fig_i, info_text, mode_text
+
+
+if __name__ == "__main__":
+    app.run_server(debug=True)
