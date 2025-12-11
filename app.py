@@ -2,7 +2,7 @@ import numpy as np
 import plotly.graph_objects as go
 from dash import Dash, dcc, html
 from dash.dependencies import Input, Output
-import dash_daq as daq  # für den Toggle-Schalter
+import dash_daq as daq
 
 # Dash-App + WSGI-Server (für Azure wichtig)
 app = Dash(__name__)
