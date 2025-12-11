@@ -226,6 +226,7 @@ Einheiten in der App:
             "Hinweis: Es wird ein idealer RC-Kreis ohne parasitäre Widerstände, Leckströme "
             "oder nichtlineare Effekte angenommen.",
             style={"marginTop": "2rem", "fontSize": "0.8rem", "color": "#777"}
+            mathjax=True,
         ),
     ]
 )
