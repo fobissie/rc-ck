@@ -1,1 +1,5 @@
-
+dash
+dash-daq
+plotly
+numpy
+gunicorn
