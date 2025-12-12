@@ -191,36 +191,59 @@ Entladen: Kondensator ist anfangs auf U₀ geladen und entlädt sich nur über R
         html.H2("Theoretischer Hintergrund", style={"marginTop": "2rem"}),
 
         dcc.Markdown(
-            """
-Zeitkonstante τ = R·C
+    r"""
+### Zeitkonstante $\tau = R \cdot C$
 
-Die Zeitkonstante τ beschreibt, wie schnell der RC-Kreis reagiert:
-- Einheit: Sekunden
-- Nach t = τ gilt:
-  - Laden: \( U_C(τ) ≈ 0{,}63 \cdot U_0 \)
-  - Entladen: \( U_C(τ) ≈ 0{,}37 \cdot U_0 \)
+Die Zeitkonstante $\tau$ beschreibt, wie schnell der RC-Kreis reagiert:
 
-Nach ungefähr 5·τ ist der Vorgang praktisch abgeschlossen.
+- Einheit: Sekunden  
+- Nach $t = \tau$ gilt:
+  - Laden: $U_C(\tau) \approx 0{,}63 \cdot U_0$
+  - Entladen: $U_C(\tau) \approx 0{,}37 \cdot U_0$
 
-Laden eines RC-Kreises (U_C(0) = 0 V)
-- Spannung: \( U_C(t) = U_0 \cdot (1 - e^{-t/(RC)}) \)
-- Ladung: \( Q(t) = C \cdot U_C(t) \)
-- Strom: \( I(t) = \frac{U_0}{R} \cdot e^{-t/(RC)} \)
+Nach ungefähr $5 \cdot \tau$ ist der Vorgang praktisch abgeschlossen.
+
+---
+
+### Laden eines RC-Kreises ($U_C(0) = 0\,\text{V}$)
+
+- Spannung:  
+  $$U_C(t) = U_0 \cdot \bigl(1 - e^{-t/(R C)}\bigr)$$
+
+- Ladung:  
+  $$Q(t) = C \cdot U_C(t)$$
+
+- Strom:  
+  $$I(t) = \frac{U_0}{R} \cdot e^{-t/(R C)}$$  
+
 (zu Beginn maximal, fällt exponentiell ab)
 
-Entladen eines RC-Kreises (U_C(0) = U_0)
-- Spannung: \( U_C(t) = U_0 \cdot e^{-t/(RC)} \)
-- Ladung: \( Q(t) = C \cdot U_0 \cdot e^{-t/(RC)} \)
-- Strom: \( I(t) = -\frac{U_0}{R} \cdot e^{-t/(RC)} \)
+---
+
+### Entladen eines RC-Kreises ($U_C(0) = U_0$)
+
+- Spannung:  
+  $$U_C(t) = U_0 \cdot e^{-t/(R C)}$$
+
+- Ladung:  
+  $$Q(t) = C \cdot U_0 \cdot e^{-t/(R C)}$$
+
+- Strom:  
+  $$I(t) = -\frac{U_0}{R} \cdot e^{-t/(R C)}$$  
+
 (Minus zeigt umgekehrte Stromrichtung)
 
-Einheiten in der App:
-- Zeit t in Millisekunden (ms)
-- Ladung Q in Milli-Coulomb (mC)
-- Strom I in Milliampere (mA)
+---
+
+**Einheiten in der App**
+
+- Zeit $t$ in Millisekunden (ms)  
+- Ladung $Q$ in Milli-Coulomb (mC)  
+- Strom $I$ in Milliampere (mA)
 """,
-            style={"background": "#f5f5f7", "padding": "1rem", "borderRadius": "8px"}
-        ),
+    style={"background": "#f5f5f7", "padding": "1rem", "borderRadius": "8px"},
+    mathjax=True,
+),
 
         html.Footer(
             "Hinweis: Es wird ein idealer RC-Kreis ohne parasitäre Widerstände, Leckströme "
